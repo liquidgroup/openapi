@@ -1,0 +1,1359 @@
+openapi: 3.0.0
+servers:
+  - url: "https://giffynet.com/v1"
+    description: "Production server (uses live data)"
+  - url: "https://sandbox.giffynet.com/v1"
+    description: "Sandbox server (uses test data)"
+info:
+  description: "This is a Business API"
+  version: "1.0.0"
+  title: "Business API"
+  contact: {}
+tags:
+  - name: Authentication
+    description: Merchant Admin Authentication
+  - name: Business
+    description: "Business operations"
+  - name: Corporation
+    description: "Corporation operations"
+  - name: Establishment
+    description: "Establishment operations"
+  - name: Outlet
+    description: "Outlet operations"
+paths:
+  /merchant/authentication:
+    post:
+      tags:
+        - Authentication
+      description: Authenticate merchant admin
+      operationId: requestOtp
+      responses:
+        "201":
+          description: Successfull Send Otp
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/otpResult"
+        "400":
+          description: Bad request
+          content: {}
+      requestBody:
+        $ref: "#/components/requestBodies/requestOtp"
+  /merchant/authentication/verifyChallenge:
+    post:
+      tags:
+        - Authentication
+      description: Authenticate merchant admin
+      operationId: verifyOtpRequest
+      responses:
+        "201":
+          description: Successfull Send Otp
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/verifyOtpResponse"
+        "400":
+          description: Bad request
+          content: {}
+      requestBody:
+        $ref: "#/components/requestBodies/verifyOtpRequest"
+  /merchant/business:
+    get:
+      tags:
+        - Business
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      description: "Get all business detail"
+      operationId: getAllBusiness
+      responses:
+        "200":
+          description: "Return list of business detail"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/businessResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - Business
+      description: "Register new business"
+      operationId: addBusiness
+      responses:
+        "201":
+          description: "Successfull Creation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/businessDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      requestBody:
+        $ref: "#/components/requestBodies/businessRegister"
+  /merchant/business/{business_id}:
+    get:
+      tags:
+        - Business
+      description: "Get business detail"
+      operationId: getBusiness
+      parameters:
+        - name: business_id
+          in: path
+          description: "ID of business"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/businessDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Business
+      description: "Update business detail"
+      operationId: updateBusiness
+      parameters:
+        - name: business_id
+          in: path
+          description: "ID of business"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Update Successfull"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/businessDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      requestBody:
+        $ref: "#/components/requestBodies/businessRegister"
+    delete:
+      tags:
+        - Business
+      description: "Delete business"
+      operationId: deleteBusiness
+      parameters:
+        - name: business_id
+          in: path
+          description: "ID of business"
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Delete successful"
+          content: {}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /merchant/corporation:
+    get:
+      tags:
+        - Corporation
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: business_id
+          in: query
+          schema:
+            type: integer
+      description: "Get all corporation detail"
+      operationId: getAllCorporation
+      responses:
+        "200":
+          description: "Return list of corporation detail"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/corporationResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - Corporation
+      description: "Register new corporation"
+      operationId: addCorporation
+      responses:
+        "201":
+          description: "Successfull Creation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/corporationDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      requestBody:
+        $ref: "#/components/requestBodies/corporationRegister"
+  /merchant/corporation/{corporation_id}:
+    get:
+      tags:
+        - Corporation
+      description: "Get corporation detail"
+      operationId: getCorporation
+      parameters:
+        - name: corporation_id
+          in: path
+          description: "ID of corporation"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/corporationDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Corporation
+      description: "Update corporation detail"
+      operationId: updateCorporation
+      parameters:
+        - name: corporation_id
+          in: path
+          description: "ID of corporation"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Update Successfull"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/corporationDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      requestBody:
+        $ref: "#/components/requestBodies/corporationRegister"
+    delete:
+      tags:
+        - Corporation
+      description: "Delete corporation detail"
+      operationId: deleteCorporation
+      parameters:
+        - name: corporation_id
+          in: path
+          description: "ID of corporation"
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Delete successful"
+          content: {}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /merchant/establishment:
+    get:
+      tags:
+        - Establishment
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: corporation_id
+          in: query
+          schema:
+            type: integer
+      description: "Get all establishment detail"
+      operationId: getAllEstablishment
+      responses:
+        "200":
+          description: "Return list of establishment detail"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/establishmentResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - Establishment
+      description: "Register new establishment"
+      operationId: addEstablishment
+      responses:
+        "201":
+          description: "Successfull Creation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/establishmentDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      requestBody:
+        $ref: "#/components/requestBodies/establishmentRegister"
+  /merchant/establishment/{establishment_id}:
+    get:
+      tags:
+        - Establishment
+      description: "Get establishment detail"
+      operationId: getEstablishment
+      parameters:
+        - name: establishment_id
+          in: path
+          description: "ID of establishment"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/establishmentDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Establishment
+      description: "Update establishment detail"
+      operationId: updateEstablishment
+      parameters:
+        - name: establishment_id
+          in: path
+          description: "ID of establishment"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Update Successfull"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/establishmentDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      requestBody:
+        $ref: "#/components/requestBodies/establishmentRegister"
+    delete:
+      tags:
+        - Establishment
+      description: "Delete establishment detail"
+      operationId: deleteEstablishment
+      parameters:
+        - name: establishment_id
+          in: path
+          description: "ID of establishment"
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Delete successful"
+          content: {}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /merchant/outlet:
+    get:
+      tags:
+        - Outlet
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: establishment_id
+          in: query
+          schema:
+            type: integer
+      description: "Get all outlet detail"
+      operationId: getAllOutlet
+      responses:
+        "200":
+          description: "Return list of outlet detail"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/outletResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - Outlet
+      description: "Register new outlet"
+      operationId: addOutlet
+      responses:
+        "201":
+          description: "Successfull Creation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/outletDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      requestBody:
+        $ref: "#/components/requestBodies/outletRegister"
+  /merchant/outlet/{outlet_id}:
+    get:
+      tags:
+        - Outlet
+      description: "Get outlet detail"
+      operationId: getOutlet
+      parameters:
+        - name: outlet_id
+          in: path
+          description: "ID of outlet"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/outletDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Outlet
+      description: "Update outlet detail"
+      operationId: updateOutlet
+      parameters:
+        - name: outlet_id
+          in: path
+          description: "ID of outlet"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Update Successfull"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/outletDetail"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      requestBody:
+        $ref: "#/components/requestBodies/outletRegister"
+    delete:
+      tags:
+        - Outlet
+      description: "Delete outlet detail"
+      operationId: deleteOutlet
+      parameters:
+        - name: outlet_id
+          in: path
+          description: "ID of outlet"
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Delete successful"
+          content: {}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  schemas:
+    businessRequest:
+      type: object
+      required:
+        - name
+        - address1
+        - country_id
+        - city_id
+        - postal_code
+        - contact_id
+      properties:
+        name:
+          type: string
+          example: "My Business"
+          minLength: 1
+          maxLength: 50
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+          minLength: 1
+          maxLength: 250
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+          minLength: 1
+          maxLength: 250
+        country_id:
+          type: integer
+          example: 21
+        city_id:
+          type: integer
+          example: 42
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 10
+    businessResponse:
+      type: object
+      required:
+        - page
+        - limit_per_page
+        - total_data
+        - data
+      properties:
+        page:
+          type: integer
+          example: 1
+          default: 1
+          readOnly: true
+        limit_per_page:
+          type: integer
+          example: 20
+          default: 20
+          readOnly: true
+        total_data:
+          type: integer
+          example: 2
+          default: 20
+          readOnly: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/businessDetail"
+          example: 
+            - id: 1
+              uuid: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+              name: "My Business"
+              address1: "Jl. Test no 01"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Phil"
+              contact_email: "phil@giffynet.com"
+              contact_phone: "+62123456789"
+              status: 1
+            - id: 2
+              uuid: "4d37beec-37e4-4481-90db-9b4b328b2d46"
+              name: "My Business Again"
+              address1: "Jl. Test no 02"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Reed"
+              contact_email: "reed@giffynet.com"
+              contact_phone: "+62987654321"
+              status: 1
+    businessDetail:
+      type: object
+      required:
+        - name
+        - address1
+        - address2
+        - country_id
+        - country_name
+        - city_id
+        - city_name
+        - postal_code
+        - contact_id
+        - contact_name
+        - contact_email
+        - contact_phone
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          readOnly: true
+        name:
+          type: string
+          example: "My Business"
+          minLength: 1
+          maxLength: 50
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+          minLength: 1
+          maxLength: 250
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+          minLength: 1
+          maxLength: 250
+        country_id:
+          type: integer
+          example: 21
+        country_name:
+          type: string
+          example: "Indonesia"
+        city_id:
+          type: integer
+          example: 42
+        city_name:
+          type: string
+          example: "Jakarta"
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+        contact_name:
+          type: string
+          example: "Phil"
+        contact_email:
+          type: string
+          example: "phil@giffynet.com"
+        contact_phone:
+          type: string
+          example: "+62123456789"
+        status:
+          type: integer
+          example: 1
+          readOnly: true
+    corporationRequest:
+      type: object
+      required:
+        - business_id
+        - name
+        - address1
+        - country_id
+        - city_id
+        - postal_code
+        - contact_id
+      properties:
+        business_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "My Corporation"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        city_id:
+          type: integer
+          example: 42
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+    corporationResponse:
+      type: object
+      required:
+        - page
+        - limit_per_page
+        - total_data
+        - data
+      properties:
+        page:
+          type: integer
+          example: 1
+          default: 1
+          readOnly: true
+        limit_per_page:
+          type: integer
+          example: 20
+          default: 20
+          readOnly: true
+        total_data:
+          type: integer
+          example: 2
+          default: 20
+          readOnly: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/corporationDetail"
+          example: 
+            - id: 1
+              businessId: 1
+              businessName: "My Business"
+              uuid: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+              name: "My corporation"
+              address1: "Jl. Test no 01"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Phil"
+              contact_email: "phil@giffynet.com"
+              contact_phone: "+62123456789"
+              status: 1
+            - id: 2
+              businessId: 1
+              businessName: "My Business"
+              uuid: "4d37beec-37e4-4481-90db-9b4b328b2d46"
+              name: "My Corporation Again"
+              address1: "Jl. Test no 02"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Reed"
+              contact_email: "reed@giffynet.com"
+              contact_phone: "+62987654321"
+              status: 1
+    corporationDetail:
+      type: object
+      required:
+        - id
+        - business_id
+        - business_name
+        - uuid
+        - name
+        - address1
+        - address2
+        - country_id
+        - country_name
+        - city_id
+        - city_name
+        - postal_code
+        - contact_id
+        - contact_name
+        - contact_email
+        - contact_phone
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+        business_id:
+          type: integer
+          example: 1
+        business_name:
+          type: string
+          example: "My Business"
+        uuid:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        name:
+          type: string
+          example: "My Corporation"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        country_name:
+          type: string
+          example: "Indonesia"
+        city_id:
+          type: integer
+          example: 42
+        city_name:
+          type: string
+          example: "Jakarta"
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+        contact_name:
+          type: string
+          example: "Phil"
+        contact_email:
+          type: string
+          example: "phil@giffynet.com"
+        contact_phone:
+          type: string
+          example: "+62123456789"
+        status:
+          type: integer
+          example: 1
+    establishmentRequest:
+      type: object
+      required:
+        - corporation_id
+        - name
+        - address1
+        - country_id
+        - city_id
+        - postal_code
+        - contact_id
+      properties:
+        corporation_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "My Establishment"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        city_id:
+          type: integer
+          example: 42
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+    establishmentResponse:
+      type: object
+      required:
+        - page
+        - limit_per_page
+        - total_data
+        - data
+      properties:
+        page:
+          type: integer
+          example: 1
+          default: 1
+          readOnly: true
+        limit_per_page:
+          type: integer
+          example: 20
+          default: 20
+          readOnly: true
+        total_data:
+          type: integer
+          example: 2
+          default: 20
+          readOnly: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/establishmentDetail"
+          example: 
+            - id: 1
+              corporation_id: 1
+              corporation_name: "My Corporation"
+              uuid: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+              name: "My Establishment"
+              address1: "Jl. Test no 01"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Phil"
+              contact_email: "phil@giffynet.com"
+              contact_phone: "+62123456789"
+              status: 1
+            - id: 2
+              corporation_id: 1
+              corporation_name: "My Corporation"
+              uuid: "4d37beec-37e4-4481-90db-9b4b328b2d46"
+              name: "My Establishment Again"
+              address1: "Jl. Test no 02"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Reed"
+              contact_email: "reed@giffynet.com"
+              contact_phone: "+62987654321"
+              status: 1
+    establishmentDetail:
+      type: object
+      required:
+        - id
+        - corporation_id
+        - corporation_name
+        - uuid
+        - name
+        - address1
+        - address2
+        - country_id
+        - country_name
+        - city_id
+        - city_name
+        - postal_code
+        - contact_id
+        - contact_name
+        - contact_email
+        - contact_phone
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+        corporation_id:
+          type: integer
+          example: 1
+        corporation_name:
+          type: string
+          example: "My Corporation"
+        uuid:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        name:
+          type: string
+          example: "My Establishment"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        country_name:
+          type: string
+          example: "Indonesia"
+        city_id:
+          type: integer
+          example: 42
+        city_name:
+          type: string
+          example: "Jakarta"
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+        contact_name:
+          type: string
+          example: "Phil"
+        contact_email:
+          type: string
+          example: "phil@giffynet.com"
+        contact_phone:
+          type: string
+          example: "+62123456789"
+        status:
+          type: integer
+          example: 1
+    outletRequest:
+      type: object
+      required:
+        - establishment_id
+        - name
+        - address1
+        - country_id
+        - city_id
+        - postal_code
+        - contact_id
+      properties:
+        establishment_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "My Outlet"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        city_id:
+          type: integer
+          example: 42
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+    outletResponse:
+      type: object
+      required:
+        - page
+        - limit_per_page
+        - total_data
+        - data
+      properties:
+        page:
+          type: integer
+          example: 1
+          default: 1
+          readOnly: true
+        limit_per_page:
+          type: integer
+          example: 20
+          default: 20
+          readOnly: true
+        total_data:
+          type: integer
+          example: 2
+          default: 20
+          readOnly: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/outletDetail"
+          example: 
+            - id: 1
+              establishment_id: 1
+              establishment_name: "My Establishment"
+              uuid: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+              name: "My Outlet"
+              address1: "Jl. Test no 01"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Phil"
+              contact_email: "phil@giffynet.com"
+              contact_phone: "+62123456789"
+              status: 1
+            - id: 2
+              establishment_id: 1
+              establishment_name: "My Establishment"
+              uuid: "4d37beec-37e4-4481-90db-9b4b328b2d46"
+              name: "My Outlet Again"
+              address1: "Jl. Test no 02"
+              address2: "Jakarta, Indonesia"
+              country_id: 21
+              country_name: "Indonesia"
+              city_id: 42
+              city_name: "Jakarta"
+              postal_code: 12345
+              contact_id: 1
+              contact_name: "Reed"
+              contact_email: "reed@giffynet.com"
+              contact_phone: "+62987654321"
+              status: 1
+    outletDetail:
+      type: object
+      required:
+        - id
+        - establishment_id
+        - establishment_name
+        - uuid
+        - name
+        - address1
+        - address2
+        - country_id
+        - country_name
+        - city_id
+        - city_name
+        - postal_code
+        - contact_id
+        - contact_name
+        - contact_email
+        - contact_phone
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+        establishment_id:
+          type: integer
+          example: 1
+        establishment_name:
+          type: string
+          example: "My Establishment"
+        uuid:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        name:
+          type: string
+          example: "My Outlet"
+        address1:
+          type: string
+          example: "Jl. Test no 01"
+        address2:
+          type: string
+          example: "Jakarta, Indonesia"
+        country_id:
+          type: integer
+          example: 21
+        country_name:
+          type: string
+          example: "Indonesia"
+        city_id:
+          type: integer
+          example: 42
+        city_name:
+          type: string
+          example: "Jakarta"
+        postal_code:
+          type: integer
+          example: 12345
+        contact_id:
+          type: integer
+          example: 1
+        contact_name:
+          type: string
+          example: "Phil"
+        contact_email:
+          type: string
+          example: "phil@giffynet.com"
+        contact_phone:
+          type: string
+          example: "+62123456789"
+        status:
+          type: integer
+          example: 1
+    requestOtp:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: info@giffynet.com
+    otpResult:
+      type: object
+      required:
+        - email
+        - otpSent
+      properties:
+        email:
+          type: string
+          format: email
+          example: info@giffynet.com
+        otpSent:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: maximun number of send email has been reached
+    verifyOtpRequest:
+      type: object
+      required:
+        - email
+        - otp
+      properties:
+        email:
+          type: string
+          format: email
+          example: info@giffynet.com
+        otp:
+          type: string
+          example: UaTws1
+        bussinessID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        invitationCode:
+          type: string
+          example: XgaW211!
+    verifyOtpResponse:
+      type: object
+      required:
+        - email
+        - verificationResult
+        - firstLogin
+      properties:
+        email:
+          type: string
+          format: email
+          example: info@giffynet.com
+        verificationResult:
+          type: boolean
+        firstLogin:
+          type: boolean
+        bussinessID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+  requestBodies:
+    businessRegister:
+      description: "Business request parameter"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/businessRequest"
+      required: true
+    corporationRegister:
+      description: "Corporation request parameter"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/corporationRequest"
+      required: true
+    establishmentRegister:
+      description: "Establishment request parameter"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/establishmentRequest"
+      required: true
+    outletRegister:
+      description: "Outlet request parameter"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/outletRequest"
+      required: true
+    requestOtp:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestOtp"
+      description: Request otp parameter
+      required: true
+    otpResult:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/otpResult"
+      description: Otp result parameter
+      required: true
+    verifyOtpRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/verifyOtpRequest"
+      description: Verify Otp Request Parameter
+      required: true
+    verifyOtpResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/verifyOtpResponse"
+      description: Verify Otp Response Parameter
+      required: true
+  responses:
+    UnauthorizedError:
+      description: "Access token is missing or invalid"
+    NotFound:
+      description: "404 Not Found"
+    BadRequest:
+      description: "Bad Request"
+  securitySchemes:
+    merchantAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - merchantAuth: []
